@@ -1,6 +1,7 @@
 package br.com.luismatos.controlefinanceiro.controller;
 
 import java.io.IOException;
+import java.sql.SQLIntegrityConstraintViolationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,13 +24,22 @@ public class CarregaArquivoController {
 	public String singleFileUpload(@RequestParam("arquivo") MultipartFile file, RedirectAttributes redirectAttributes) throws IOException {
 
 		if (file.isEmpty()) {
-			redirectAttributes.addFlashAttribute("messageError", "Selecione um arquivo para fazer upload!");
+			redirectAttributes.addFlashAttribute("messageError", "Arquivo vazio ou selecione um arquivo para fazer upload!");
 			return "redirect:/";
 		}
-
+	
 		arquivoService.infosArquivo(file);
 
 		arquivoService.lerArquivo(file);
+		
+		arquivoService.processarTransacoes(file);
+		
+		try {
+			arquivoService.salvarTransacoesNoBanco();
+		} catch (SQLIntegrityConstraintViolationException e) {
+			redirectAttributes.addFlashAttribute("messageError", "As transações já foram processadas e registradas no sitema para o dia informado!");
+			return "redirect:/";
+		}
 
 		redirectAttributes.addFlashAttribute("message", "Você carregou com sucesso '" + file.getOriginalFilename() + "'");
 

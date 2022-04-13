@@ -27,7 +27,7 @@ public class ArquivoService {
 	@Autowired
 	private ArquivoRepository arquivoRepository;
 
-	private ArrayList<Transacao> transacaos = new ArrayList<>();
+	private ArrayList<Transacao> transacaos;
 
 	private LocalDateTime dataPrimeiraLinha;
 
@@ -69,6 +69,7 @@ public class ArquivoService {
 			Iterable<CSVRecord> csvRecords = csvParser.getRecords();
 			
 			dataImportacao = LocalDateTime.now();
+			transacaos = new ArrayList<>();
 
 			for (CSVRecord csvRecord : csvRecords) {
 

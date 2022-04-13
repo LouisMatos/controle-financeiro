@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import br.com.luismatos.controlefinanceiro.model.ImportacaoRealizadaDTO;
 import br.com.luismatos.controlefinanceiro.model.Transacao;
 import br.com.luismatos.controlefinanceiro.repository.ArquivoRepository;
 
@@ -28,6 +30,8 @@ public class ArquivoService {
 	private ArrayList<Transacao> transacaos = new ArrayList<>();
 
 	private LocalDateTime dataPrimeiraLinha;
+
+	private LocalDateTime dataImportacao;
 
 	@SuppressWarnings("resource")
 	public void lerArquivo(MultipartFile file) {
@@ -63,6 +67,8 @@ public class ArquivoService {
 			CSVParser csvParser;
 			csvParser = new CSVParser(fileReader, CSVFormat.EXCEL);
 			Iterable<CSVRecord> csvRecords = csvParser.getRecords();
+			
+			dataImportacao = LocalDateTime.now();
 
 			for (CSVRecord csvRecord : csvRecords) {
 
@@ -97,6 +103,7 @@ public class ArquivoService {
 		transacao.setValorTransacao(
 				(csvRecord.get(6).trim().isEmpty()) ? null : new BigDecimal(csvRecord.get(6)).setScale(2));
 		transacao.setDataTransacao(LocalDateTime.parse(csvRecord.get(7)));
+		transacao.setDataImportacaoTransacoes(this.dataImportacao);
 
 		if (validator(transacao)) {
 			return transacao;
@@ -131,6 +138,12 @@ public class ArquivoService {
 		} else {
 			throw new SQLIntegrityConstraintViolationException();
 		}
+
+	}
+
+	public List<ImportacaoRealizadaDTO> buscarImportacoesRealizadas() {
+
+		return arquivoRepository.findDataTRansacaoDataImportacao();
 
 	}
 

@@ -33,6 +33,16 @@ public class Transacao {
 
 	private LocalDateTime dataTransacao;
 
+	private LocalDateTime dataImportacaoTransacoes;
+
+	public LocalDateTime getDataImportacaoTransacoes() {
+		return dataImportacaoTransacoes;
+	}
+
+	public void setDataImportacaoTransacoes(LocalDateTime dataImportacaoTransacoes) {
+		this.dataImportacaoTransacoes = dataImportacaoTransacoes;
+	}
+
 	public String getBancoOrigem() {
 		return bancoOrigem;
 	}
@@ -99,10 +109,10 @@ public class Transacao {
 
 	@Override
 	public String toString() {
-		return "Transacao [bancoOrigem=" + bancoOrigem + ", agenciaOrigem=" + agenciaOrigem + ", contaOrigem="
-				+ contaOrigem + ", bancoDestino=" + bancoDestino + ", agenciaDestino=" + agenciaDestino
-				+ ", contaDestino=" + contaDestino + ", valorTransacao=" + valorTransacao + ", dataTransacao="
-				+ dataTransacao + "]";
+		return "Transacao [bancoOrigem=" + bancoOrigem + ", agenciaOrigem=" + agenciaOrigem
+				+ ", contaOrigem=" + contaOrigem + ", bancoDestino=" + bancoDestino + ", agenciaDestino="
+				+ agenciaDestino + ", contaDestino=" + contaDestino + ", valorTransacao=" + valorTransacao
+				+ ", dataTransacao=" + dataTransacao + ", dataImportacaoTransacoes=" + dataImportacaoTransacoes + "]";
 	}
 
 }

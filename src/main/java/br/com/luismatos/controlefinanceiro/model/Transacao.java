@@ -1,6 +1,7 @@
 package br.com.luismatos.controlefinanceiro.model;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
@@ -31,7 +32,7 @@ public class Transacao {
 
 	private BigDecimal valorTransacao;
 
-	private LocalDateTime dataTransacao;
+	private LocalDate dataTransacao;
 
 	private LocalDateTime dataImportacaoTransacoes;
 
@@ -99,11 +100,11 @@ public class Transacao {
 		this.valorTransacao = valorTransacao;
 	}
 
-	public LocalDateTime getDataTransacao() {
+	public LocalDate getDataTransacao() {
 		return dataTransacao;
 	}
 
-	public void setDataTransacao(LocalDateTime dataTransacao) {
+	public void setDataTransacao(LocalDate dataTransacao) {
 		this.dataTransacao = dataTransacao;
 	}
 

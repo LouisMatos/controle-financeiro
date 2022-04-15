@@ -80,7 +80,7 @@ public class ArquivoService {
 				}
 
 				if (transacao != null) {
-					if (transacao.getDataTransacao().toLocalDate().equals(dataPrimeiraLinha.toLocalDate())) {
+					if (transacao.getDataTransacao().equals(dataPrimeiraLinha.toLocalDate())) {
 						transacaos.add(transacao);
 					}
 				}
@@ -103,7 +103,7 @@ public class ArquivoService {
 		transacao.setContaDestino(csvRecord.get(5));
 		transacao.setValorTransacao(
 				(csvRecord.get(6).trim().isEmpty()) ? null : new BigDecimal(csvRecord.get(6)).setScale(2));
-		transacao.setDataTransacao(LocalDateTime.parse(csvRecord.get(7)));
+		transacao.setDataTransacao(LocalDateTime.parse(csvRecord.get(7)).toLocalDate());
 		transacao.setDataImportacaoTransacoes(this.dataImportacao);
 
 		if (validator(transacao)) {

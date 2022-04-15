@@ -26,7 +26,7 @@ public class IndexController {
 		List<ImportacaoRealizadaDTO> importacoesRealizadas = arquivoService.buscarImportacoesRealizadas();
 
 		model.addAttribute("importacoesRealizadas", importacoesRealizadas);
-//		return "redirect:/";
+
 		return "index";
 	}
 }

@@ -106,7 +106,7 @@
 												}
 											},
 
-											"orderable" : false,
+											"orderable" : true,
 											"order" : [ 0, "desc" ],
 											'columnDefs' : [
 													{
@@ -116,24 +116,13 @@
 													},
 													{
 														'targets' : 0,
-														'render' : function(
-																data) {
-															var date = new Date(
-																	data);
-															var month = date
-																	.getMonth() + 1;
-															return date
-																	.getDate()
-																	+ "/"
-																	+ (month
-																			.toString().length > 1 ? month
-																			: "0"
-																					+ month)
-																	+ "/"
-																	+ date
-																			.getFullYear();
-														}
-													} ],
+														'render' : $.fn.dataTable.render.moment('DD/MM/YYYY')
+													},
+													{
+														'targets' : 1,
+														'render' : $.fn.dataTable.render.moment('YYYY-MM-DD HH:mm:ss.S', 'DD/MM/YYYY - HH:mm:ss')
+													}],
+											
 
 										});
 

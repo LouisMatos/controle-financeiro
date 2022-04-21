@@ -1,15 +1,25 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
 <meta charset="ISO-8859-1">
 <title>Insert title here</title>
 </head>
 <body>
 
-	<div layout:fragment="content">
-		
-	</div>
+	<div layout:fragment="content"></div>
 
 </body>
 </html>
+<script>
+	$(".alert-dismissible").fadeTo(2000, 500).slideUp(500, function() {
+		$(".alert-dismissible").alert('close');
+	});
+
+	$('#arquivo').on('change', function() {
+		//get the file name
+		var fileName = $(this).val();
+		//replace the "Choose a file" label
+		$(this).next('.custom-file-label').html(fileName);
+	})
+</script>

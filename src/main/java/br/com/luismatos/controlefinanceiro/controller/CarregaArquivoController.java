@@ -1,10 +1,13 @@
 package br.com.luismatos.controlefinanceiro.controller;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.sql.SQLIntegrityConstraintViolationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,13 +22,20 @@ public class CarregaArquivoController {
 
 	@Autowired
 	private ArquivoService arquivoService;
+	
+	
+	@GetMapping("/transacoes")
+	public String transacoes(Model model, Principal principal) {
+		model.addAttribute("importacoesRealizadas", arquivoService.buscarImportacoesRealizadas());
+		return "transacoes/transacoes";
+	}
 
 	@PostMapping
 	public String singleFileUpload(@RequestParam("arquivo") MultipartFile file, RedirectAttributes redirectAttributes) throws IOException {
 
 		if (file.isEmpty()) {
 			redirectAttributes.addFlashAttribute("messageError", "Arquivo vazio ou selecione um arquivo para fazer upload!");
-			return "redirect:/";
+			return "redirect:/upload/transacoes";
 		}
 	
 		arquivoService.infosArquivo(file);
@@ -38,12 +48,12 @@ public class CarregaArquivoController {
 			arquivoService.salvarTransacoesNoBanco();
 		} catch (SQLIntegrityConstraintViolationException e) {
 			redirectAttributes.addFlashAttribute("messageError", "As transações já foram processadas e registradas no sitema para o dia informado!");
-			return "redirect:/";
+			return "redirect:/upload/transacoes";
 		}
 
 		redirectAttributes.addFlashAttribute("message", "Você carregou com sucesso '" + file.getOriginalFilename() + "'");
 
-		return "redirect:/";
+		return "redirect:/upload/transacoes";
 	}
 
 }

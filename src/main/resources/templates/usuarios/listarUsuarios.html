@@ -11,7 +11,10 @@
 
 
 		<hr>
-
+		<div class="alert alert-danger alert-dismissible fade show" id="error"
+			th:if="${messageError}" role="alert">
+			<span th:text="${messageError}"></span>
+		</div>
 		<div class="form-group">
 
 			<h3 class="mb-2 mt-2  text-center">USUÁRIOS CADASTRADOS</h3>
@@ -31,8 +34,9 @@
 						<td th:text="${usuario.nome}"></td>
 						<td th:text="${usuario.email}"></td>
 						<td>
-							<button type="button" class="btn btn-primary">Editar</button>
-							<button type="button" class="btn btn-danger">Remover</button>
+							<button type="button" class="btn btn-primary" onclick="">Editar</button>
+							<button type="button" class="btn btn-danger"
+								th:onclick="|validarRemocao(${usuario.id})|">Remover</button>
 						</td>
 					</tr>
 				</tbody>
@@ -53,6 +57,13 @@
 </body>
 </html>
 <script>
+	function validarRemocao(usuario) {
+		var result = confirm("Voçê realmente deseja excluir esse usuário!?");
+		if (result) {
+		    parent.location.replace("/usuario/excluir/" + usuario);
+		}
+	}
+
 	$(".alert-dismissible").fadeTo(2000, 500).slideUp(500, function() {
 		$(".alert-dismissible").alert('close');
 	});

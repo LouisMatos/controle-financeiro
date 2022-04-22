@@ -12,7 +12,7 @@ import br.com.luismatos.controlefinanceiro.model.UsuariosCadastradosDTO;
 
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
-	@Query(value = "SELECT * FROM usuarios u WHERE u.email = :email", nativeQuery = true)
+	@Query(value = "SELECT * FROM usuarios u WHERE u.email = :email and u.status = 1", nativeQuery = true)
 	Optional<Usuario> findByEmail(@Param("email") String email);
 
 	@Query(value = "SELECT u.id, u.nome, u.email FROM usuarios u WHERE status = true", nativeQuery = true)

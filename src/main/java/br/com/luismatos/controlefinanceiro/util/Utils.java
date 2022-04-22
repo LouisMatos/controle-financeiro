@@ -24,5 +24,9 @@ public class Utils {
 		}
 		return false;
 	}
+	
+	public static void main(String[] args) {
+		System.out.println(encrypt("123999"));
+	}
 
 }

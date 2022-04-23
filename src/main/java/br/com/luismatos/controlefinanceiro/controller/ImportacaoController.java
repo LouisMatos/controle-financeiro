@@ -5,6 +5,7 @@ import java.security.Principal;
 import java.sql.SQLIntegrityConstraintViolationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,19 +15,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import br.com.luismatos.controlefinanceiro.service.ArquivoService;
+import br.com.luismatos.controlefinanceiro.model.Usuario;
+import br.com.luismatos.controlefinanceiro.service.ImportacaoService;
 
 @Controller
 @RequestMapping("/upload")
-public class CarregaArquivoController {
+public class ImportacaoController {
 
 	@Autowired
-	private ArquivoService arquivoService;
+	private ImportacaoService importacaoService;
 	
 	
 	@GetMapping("/transacoes")
 	public String transacoes(Model model, Principal principal) {
-		model.addAttribute("importacoesRealizadas", arquivoService.buscarImportacoesRealizadas());
+		model.addAttribute("importacoesRealizadas", importacaoService.buscarImportacoesRealizadas());
 		return "transacoes/transacoes";
 	}
 
@@ -38,14 +40,14 @@ public class CarregaArquivoController {
 			return "redirect:/upload/transacoes";
 		}
 	
-		arquivoService.infosArquivo(file);
+		importacaoService.infosArquivo(file);
 
-		arquivoService.lerArquivo(file);
+		importacaoService.lerArquivo(file);
 		
-		arquivoService.processarTransacoes(file);
+		importacaoService.processarTransacoes(file, SecurityContextHolder.getContext().getAuthentication().getPrincipal());
 		
 		try {
-			arquivoService.salvarTransacoesNoBanco();
+			importacaoService.salvarTransacoesNoBanco();
 		} catch (SQLIntegrityConstraintViolationException e) {
 			redirectAttributes.addFlashAttribute("messageError", "As transações já foram processadas e registradas no sitema para o dia informado!");
 			return "redirect:/upload/transacoes";

@@ -5,9 +5,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -17,6 +19,9 @@ public class Transacao {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	private Usuario usuario;
 
 	private String bancoOrigem;
 
@@ -108,12 +113,21 @@ public class Transacao {
 		this.dataTransacao = dataTransacao;
 	}
 
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
+
 	@Override
 	public String toString() {
-		return "Transacao [bancoOrigem=" + bancoOrigem + ", agenciaOrigem=" + agenciaOrigem
-				+ ", contaOrigem=" + contaOrigem + ", bancoDestino=" + bancoDestino + ", agenciaDestino="
-				+ agenciaDestino + ", contaDestino=" + contaDestino + ", valorTransacao=" + valorTransacao
-				+ ", dataTransacao=" + dataTransacao + ", dataImportacaoTransacoes=" + dataImportacaoTransacoes + "]";
+		return "Transacao [id=" + id + ", usuario=" + usuario + ", bancoOrigem=" + bancoOrigem + ", agenciaOrigem="
+				+ agenciaOrigem + ", contaOrigem=" + contaOrigem + ", bancoDestino=" + bancoDestino
+				+ ", agenciaDestino=" + agenciaDestino + ", contaDestino=" + contaDestino + ", valorTransacao="
+				+ valorTransacao + ", dataTransacao=" + dataTransacao + ", dataImportacaoTransacoes="
+				+ dataImportacaoTransacoes + "]";
 	}
 
 }

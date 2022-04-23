@@ -19,10 +19,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import br.com.luismatos.controlefinanceiro.model.ImportacaoRealizadaDTO;
 import br.com.luismatos.controlefinanceiro.model.Transacao;
+import br.com.luismatos.controlefinanceiro.model.Usuario;
 import br.com.luismatos.controlefinanceiro.repository.ArquivoRepository;
 
 @Service
-public class ArquivoService {
+public class ImportacaoService {
 
 	@Autowired
 	private ArquivoRepository arquivoRepository;
@@ -32,6 +33,8 @@ public class ArquivoService {
 	private LocalDateTime dataPrimeiraLinha;
 
 	private LocalDateTime dataImportacao;
+	
+	private Usuario usuario;
 
 	@SuppressWarnings("resource")
 	public void lerArquivo(MultipartFile file) {
@@ -61,7 +64,7 @@ public class ArquivoService {
 	}
 
 	@SuppressWarnings("resource")
-	public void processarTransacoes(MultipartFile file) {
+	public void processarTransacoes(MultipartFile file, Object sessao) {
 		try {
 			BufferedReader fileReader = new BufferedReader(new InputStreamReader(file.getInputStream(), "UTF-8"));
 			CSVParser csvParser;
@@ -70,10 +73,11 @@ public class ArquivoService {
 			
 			dataImportacao = LocalDateTime.now();
 			transacaos = new ArrayList<>();
+			usuario = (Usuario) sessao;
 
 			for (CSVRecord csvRecord : csvRecords) {
 
-				Transacao transacao = converterTransacaoParaObjeto(csvRecord);
+				Transacao transacao = converterTransacaoParaObjeto(csvRecord, usuario);
 
 				if (csvRecord.getRecordNumber() == 1) {
 					dataPrimeiraLinha = LocalDateTime.parse(csvRecord.get(7));
@@ -92,7 +96,7 @@ public class ArquivoService {
 
 	}
 
-	private Transacao converterTransacaoParaObjeto(CSVRecord csvRecord) {
+	private Transacao converterTransacaoParaObjeto(CSVRecord csvRecord, Usuario usuario) {
 		Transacao transacao = new Transacao();
 
 		transacao.setBancoOrigem(csvRecord.get(0));
@@ -105,6 +109,7 @@ public class ArquivoService {
 				(csvRecord.get(6).trim().isEmpty()) ? null : new BigDecimal(csvRecord.get(6)).setScale(2));
 		transacao.setDataTransacao(LocalDateTime.parse(csvRecord.get(7)).toLocalDate());
 		transacao.setDataImportacaoTransacoes(this.dataImportacao);
+		transacao.setUsuario(usuario);
 
 		if (validator(transacao)) {
 			return transacao;

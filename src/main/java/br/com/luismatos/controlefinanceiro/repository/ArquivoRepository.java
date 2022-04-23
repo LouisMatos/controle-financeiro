@@ -15,7 +15,7 @@ public interface ArquivoRepository extends JpaRepository<Transacao, Long> {
 	@Query(value = "SELECT count(*) FROM transacoes WHERE data_transacao LIKE %:dataTransacao%", nativeQuery = true)
 	Integer findByDataTransacao(@Param("dataTransacao") LocalDate dataTransacao);
 
-	@Query(value = "SELECT distinct  t.data_transacao as dataTransacoes, t.data_importacao_transacoes as dataImportacao FROM transacoes t", nativeQuery = true)
+	@Query(value = "SELECT distinct  t.data_transacao as dataTransacoes, t.data_importacao_transacoes as dataImportacao, u.nome as nomeUsuario, u.id as idUsuario FROM transacoes t JOIN usuarios as u ON t.usuario_id = u.id", nativeQuery = true)
 	List<ImportacaoRealizadaDTO> findDataTRansacaoDataImportacao();
 
 }

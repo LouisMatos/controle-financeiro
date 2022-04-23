@@ -18,8 +18,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 @Entity
 @Table(name = "usuarios")
 public class Usuario implements UserDetails {
@@ -43,8 +41,10 @@ public class Usuario implements UserDetails {
 
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	private LocalDateTime cadastro;
+	
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario", fetch = FetchType.LAZY)
+	private List<Transacao> transacoes;
 
-	@JsonIgnore
 	@OneToMany(mappedBy = "usuario", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	private List<Papel> papeis;
 
@@ -141,7 +141,6 @@ public class Usuario implements UserDetails {
 
 	@Override
 	public String toString() {
-		return "Usuario [id=" + id + ", nome=" + nome + ", senha=" + senha + ", email=" + email + ", status=" + status
-				+ ", cadastro=" + cadastro + "]";
+		return "Usuario [id=" + id + ", nome=" + nome + ", email=" + email + ", cadastro=" + cadastro + "]";
 	}
 }

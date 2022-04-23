@@ -50,18 +50,21 @@
 					<tr>
 						<th>Data Transações</th>
 						<th>Data Importação</th>
+						<th>Importado por</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr th:each="importacao : ${importacoesRealizadas}">
 						<td th:text="${importacao.dataTransacoes}"></td>
 						<td th:text="${importacao.dataImportacao}"></td>
+						<td th:text="${importacao.nomeUsuario}"></td>
 					</tr>
 				</tbody>
 				<tfoot>
 					<tr>
 						<th>Data Transações</th>
 						<th>Data Importação</th>
+						<th>Importado por</th>
 					</tr>
 				</tfoot>
 			</table>

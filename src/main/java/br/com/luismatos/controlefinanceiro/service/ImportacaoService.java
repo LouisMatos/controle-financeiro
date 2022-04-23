@@ -153,4 +153,12 @@ public class ImportacaoService {
 
 	}
 
+	public List<Transacao> buscarTransacoesDataDetalhado(String dataTransacao) {
+		return arquivoRepository.findByDataTransacaoDetalhado(dataTransacao);
+	}
+
+	public Object buscarDetalhesTransacao(String dataTransacao) {
+		return arquivoRepository.findTransacaoDetalhes(dataTransacao);
+	}
+
 }

@@ -1,6 +1,8 @@
 package br.com.luismatos.controlefinanceiro.model;
 
 public interface ImportacaoRealizadaDTO {
+	
+	public String getIdTransacao();
 
 	public String getDataTransacoes();
 

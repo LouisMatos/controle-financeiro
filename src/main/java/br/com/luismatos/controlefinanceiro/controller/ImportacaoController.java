@@ -9,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,6 +31,15 @@ public class ImportacaoController {
 	public String transacoes(Model model, Principal principal) {
 		model.addAttribute("importacoesRealizadas", importacaoService.buscarImportacoesRealizadas());
 		return "transacoes/transacoes";
+	}
+	
+	@GetMapping("/transacao/detalhar/{data_transacao}")
+	public String detalhar(@PathVariable("data_transacao") String dataTransacao, Model model, Principal principal) {
+		
+		model.addAttribute("detalhesImportacao", importacaoService.buscarDetalhesTransacao(dataTransacao));
+		
+		model.addAttribute("transacoesDetalhadas", importacaoService.buscarTransacoesDataDetalhado(dataTransacao));
+		return "transacoes/detalharTransacao";
 	}
 
 	@PostMapping

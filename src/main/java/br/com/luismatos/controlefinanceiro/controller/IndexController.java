@@ -15,4 +15,9 @@ public class IndexController {
 	public String home(Model model, Principal principal) {
 		return "index";
 	}
+	
+	@GetMapping("imagem/index")
+	public String imagemHome(Model model, Principal principal) {
+		return "base/imagens/a-importancia-do-controle-financeiros-de-projetos.jpg";
+	}
 }

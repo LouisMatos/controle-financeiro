@@ -34,9 +34,8 @@
 						<td th:text="${usuario.nome}"></td>
 						<td th:text="${usuario.email}"></td>
 						<td>
-							<button type="button" class="btn btn-primary" onclick="">Editar</button>
-							<button type="button" class="btn btn-danger"
-								th:onclick="|validarRemocao(${usuario.id})|">Remover</button>
+							<button type="button" class="btn btn-primary" th:onclick="|validarEdicao(${usuario.id})|">Editar</button>
+							<button type="button" class="btn btn-danger" th:onclick="|validarRemocao(${usuario.id})|">Remover</button>
 						</td>
 					</tr>
 				</tbody>
@@ -61,6 +60,13 @@
 		var result = confirm("Voçê realmente deseja excluir esse usuário!?");
 		if (result) {
 		    parent.location.replace("/usuario/excluir/" + usuario);
+		}
+	}
+	
+	function validarEdicao(usuario){
+		var result = confirm("Voçê realmente deseja editar esse usuário!?");
+		if (result) {
+		    parent.location.replace("/usuario/editar/" + usuario);
 		}
 	}
 

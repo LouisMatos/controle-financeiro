@@ -30,11 +30,24 @@ public class UsuarioController {
 		model.addAttribute("usuarios", usuarioService.buscarUsuariosCadastrados());
 		return "usuarios/listarUsuarios";
 	}
+	
+	@GetMapping("/editar/{id}")
+	public String editar(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes,  Model model, Principal principal) {
+
+		if (usuarioService.verificaUsuarioAdministradorSistema(id)) {
+			redirectAttributes.addFlashAttribute("messageError", "Voçê não pode se editar o usuário administrador do sistema!");
+			return "redirect:/usuario/listar";
+		}
+		model.addAttribute("usuarioEditar", usuarioService.buscarUsuarioPorId(id).get());
+		return "usuarios/editarUsuario";
+	}
 
 	@GetMapping("/cadastrar")
 	public String cadastrar(Model model, Principal principal) {
 		return "usuarios/novoUsuario";
 	}
+	
+	
 
 	@GetMapping("/excluir/{id}")
 	public String excluir(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes) {
@@ -49,6 +62,20 @@ public class UsuarioController {
 			return "redirect:/usuario/listar";
 		}else {
 			usuarioService.excluirUsuarioDoSistema(id);
+		}
+
+		return "redirect:/usuario/listar";
+	}
+	
+	
+	@PostMapping("/editarUsuario")
+	public String editar(@Valid UsuarioDTO usuarioDTO, RedirectAttributes redirectAttributes) {
+
+		if (!usuarioService.verificaEmailExiste(usuarioDTO)) {
+			redirectAttributes.addFlashAttribute("messageError", "Email já cadastrado!");
+			return "redirect:/usuario/editar/"+usuarioDTO.getId();
+		} else {
+			usuarioService.editarUsuario(usuarioDTO);
 		}
 
 		return "redirect:/usuario/listar";

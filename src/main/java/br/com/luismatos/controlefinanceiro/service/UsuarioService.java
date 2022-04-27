@@ -63,11 +63,10 @@ public class UsuarioService {
 	public Optional<Usuario> buscarUsuario(String email) {
 		return usuarioRepository.findByEmail(email);
 	}
-	
+
 	public Optional<Usuario> buscarUsuarioPorId(Integer id) {
 		return usuarioRepository.findById(id);
 	}
-	
 
 	public Optional<Usuario> verificaEmailESenha(String login, String senha) {
 		return usuarioRepository.findByEmailAndSenha(login, senha);
@@ -89,10 +88,26 @@ public class UsuarioService {
 
 	public boolean verificaUsuarioAdministradorSistema(Integer id) {
 		Optional<Usuario> usuario = usuarioRepository.findById(id);
-		if(usuario.get().getNome().equalsIgnoreCase("Admin") && usuario.get().getEmail().equalsIgnoreCase("admin@email.com.br")) {
+		if (usuario.get().getNome().equalsIgnoreCase("Admin")
+				&& usuario.get().getEmail().equalsIgnoreCase("admin@email.com.br")) {
 			return true;
 		}
 		return false;
+	}
+
+	public void editarUsuario(@Valid UsuarioDTO usuarioDTO) {
+		Usuario usuario = usuarioRepository.findById(usuarioDTO.getId()).get();
+
+		usuario.setEmail(usuarioDTO.getEmail().toUpperCase());
+		usuario.setNome(usuarioDTO.getNome());
+		
+
+		if (usuarioDTO.isSenhaNova()) {
+			usuario.setSenha(Utils.encrypt(Utils.getRandomNumberString()));
+		}
+
+		usuarioRepository.save(usuario);
+		sendEmail.enviarEmail(usuarioDTO);
 	}
 
 }

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th=http://www.thymeleaf.org
+	xmlns:sec=http://www.thymeleaf.org/extras/spring-security
+	xmlns:shiro=http://www.pollix.at/thymeleaf/shiro
+	layout:decorate="~{/base/layout}">
+</head>
+<body>
+
+	<div layout:fragment="content">
+
+
+		<div class="card mt-2">
+			<div class="card-header">EDITAR  USUÁRIO</div>
+			<div class="card-body">
+
+				<form method="POST" th:action="@{/usuario/editarUsuario}">
+				<input id="id" name="id" type="hidden" th:value="${usuarioEditar.id}"> 
+					<div class="form-group row">
+						<label for="nome" class="col-4 col-form-label">Nome:</label>
+						<div class="col-8">
+							<input id="nome" name="nome" th:value="${usuarioEditar.nome}"
+								placeholder="Informe o seu nome" type="text"
+								aria-describedby="nomeHelpBlock" class="form-control"
+								required="required">
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="email" class="col-4 col-form-label">Email:</label>
+						<div class="col-8">
+							<div class="input-group">
+
+								<input id="email" name="email"  th:value="${usuarioEditar.email}"
+									placeholder="Informe seu email" type="text"
+									class="form-control" readonly aria-describedby="emailHelpBlock">
+							</div>
+
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-4">Gerar nova Senha?</label>
+						<div class="col-8">
+							<div class="custom-control custom-radio custom-control-inline">
+								<input name="senhaNova" id="senhaNova_0" type="radio"
+									class="custom-control-input" value="true"> <label
+									for="senhaNova_0" class="custom-control-label">Sim</label>
+							</div>
+							<div class="custom-control custom-radio custom-control-inline">
+								<input name="senhaNova" id="senhaNova_1" type="radio"
+									class="custom-control-input" value="false"> <label
+									for="senhaNova_1" class="custom-control-label">Não</label>
+							</div>
+						</div>
+					</div>
+					<div class="form-group row">
+						<div class="offset-4 col-8">
+							<button name="submit" type="submit" class="btn btn-primary">Editar</button>
+						</div>
+					</div>
+				</form>
+				<div class="alert alert-danger alert-dismissible fade show"
+					id="error" th:if="${messageError}" role="alert">
+					<span th:text="${messageError}"></span>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+</body>
+</html>

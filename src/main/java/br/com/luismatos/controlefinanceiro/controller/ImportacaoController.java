@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import br.com.luismatos.controlefinanceiro.model.Usuario;
 import br.com.luismatos.controlefinanceiro.service.ImportacaoService;
 
 @Controller
@@ -31,6 +30,21 @@ public class ImportacaoController {
 	public String transacoes(Model model, Principal principal) {
 		model.addAttribute("importacoesRealizadas", importacaoService.buscarImportacoesRealizadas());
 		return "transacoes/transacoes";
+	}
+	
+	@GetMapping("/analiseTransacoes")
+	public String transacoesSuspeitas(Model model, Principal principal) {
+		return "transacoes/transacoesSuspeitas";
+	}
+	
+	@PostMapping("/transacao/analisar")
+	public String analisar(@RequestParam("data_analisar") String dataAnalisar, Model model, Principal principal) {
+			
+		model.addAttribute("transacoesSuspeitas", importacaoService.analisarTransacoesSuspeitasData(dataAnalisar));
+		
+		model.addAttribute("contasSuspeitas", importacaoService.analisarContasSuspeitas(dataAnalisar));
+		
+		return "transacoes/transacoesSuspeitas";
 	}
 	
 	@GetMapping("/transacao/detalhar/{data_transacao}")

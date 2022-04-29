@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th=http://www.thymeleaf.org
+	xmlns:sec=http://www.thymeleaf.org/extras/spring-security
+	xmlns:shiro=http://www.pollix.at/thymeleaf/shiro
+	layout:decorate="~{/base/layout}">
+
+
+</head>
+<body>
+
+	<div layout:fragment="content">
+
+		<hr>
+		<form method="POST" th:action="@{/upload/transacao/analisar}">
+
+			<h3 class="mb-2 mt-2  text-center">Análise de Transações
+				Suspeitas</h3>
+
+			<div class="form-group" style="position: relative">
+				<input type="text" class="form-control"
+					placeholder="Selecione o mês e o Ano para analisar as transações"
+					id="data_analisar" name="data_analisar">
+			</div>
+
+
+			<div class="form-group">
+				<button name="submit" type="submit" class="btn btn-primary">Realizar
+					análise</button>
+			</div>
+		</form>
+
+
+		<hr>
+
+		<div class="form-group">
+
+			<h3 class="mb-2 mt-2  text-center">Transções Suspeitas</h3>
+
+			<table id="example" class="table table-striped table-bordered">
+				<thead>
+					<tr>
+						<th>Banco - Origem</th>
+						<th>Agência - Origem</th>
+						<th>Conta - Origem</th>
+						<th>Banco - Destino</th>
+						<th>Agência - Destino</th>
+						<th>Conta - Destino</th>
+						<th>Valor</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="transacao : ${transacoesSuspeitas}">
+						<td th:text="${transacao.bancoOrigem}"></td>
+						<td th:text="${transacao.agenciaOrigem}"></td>
+						<td th:text="${transacao.contaOrigem}"></td>
+						<td th:text="${transacao.bancoDestino}"></td>
+						<td th:text="${transacao.agenciaDestino}"></td>
+						<td th:text="${transacao.contaDestino}"></td>
+						<td th:text="${transacao.valorTransacao}"></td>
+					</tr>
+				</tbody>
+				<tfoot>
+					<tr>
+						<th>Banco - Origem</th>
+						<th>Agência - Origem</th>
+						<th>Conta - Origem</th>
+						<th>Banco - Destino</th>
+						<th>Agência - Destino</th>
+						<th>Conta - Destino</th>
+						<th>Valor</th>
+					</tr>
+				</tfoot>
+			</table>
+		</div>
+		
+		
+		<hr>
+
+		<div class="form-group">
+
+			<h3 class="mb-2 mt-2  text-center">Contas Suspeitas</h3>
+
+			<table id="example" class="table table-striped table-bordered">
+				<thead>
+					<tr>
+						<th>Banco</th>
+						<th>Agência</th>
+						<th>Conta</th>
+						<th>Valor Movimentado</th>
+						<th>Tipo Movimentação</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="transacao : ${transacoesSuspeitas}">
+						<td th:text="${transacao.bancoOrigem}"></td>
+						<td th:text="${transacao.agenciaOrigem}"></td>
+						<td th:text="${transacao.contaOrigem}"></td>
+						<td th:text="${transacao.bancoDestino}"></td>
+						<td th:text="${transacao.agenciaDestino}"></td>
+					</tr>
+				</tbody>
+				<tfoot>
+					<tr>
+						<th>Banco</th>
+						<th>Agência</th>
+						<th>Conta</th>
+						<th>Valor Movimentado</th>
+						<th>Tipo Movimentação</th>
+					</tr>
+				</tfoot>
+			</table>
+		</div>
+
+	</div>
+
+</body>
+</html>
+<script type="text/javascript">
+	$(function() {
+		$('#data_analisar').datetimepicker({
+
+			format : 'MM/YYYY'
+		});
+	});
+	
+	$(document)
+	.ready(
+			function() {
+
+				$('#example')
+						.DataTable(
+								{
+									"language" : {
+										"sEmptyTable" : "Nenhum registro encontrado",
+										"sInfo" : "Mostrando de _START_ até _END_ de _TOTAL_ registros",
+										"sInfoEmpty" : "Mostrando 0 até 0 de 0 registros",
+										"sInfoFiltered" : "(Filtrados de _MAX_ registros)",
+										"sInfoPostFix" : "",
+										"sInfoThousands" : ".",
+										"sLengthMenu" : "Mostrar _MENU_ resultados por página",
+										"sLoadingRecords" : "Carregando...",
+										"sProcessing" : "Processando...",
+										"sZeroRecords" : "Nenhum registro encontrado",
+										"sSearch" : "Pesquisar",
+										"oPaginate" : {
+											"sNext" : "Próximo",
+											"sPrevious" : "Anterior",
+											"sFirst" : "Primeiro",
+											"sLast" : "Último"
+										},
+										"oAria" : {
+											"sSortAscending" : ": Ordenar colunas de forma ascendente",
+											"sSortDescending" : ": Ordenar colunas de forma descendente"
+										}
+									},
+
+								});
+
+			});
+</script>

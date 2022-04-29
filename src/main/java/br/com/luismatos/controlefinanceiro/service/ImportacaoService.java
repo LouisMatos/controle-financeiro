@@ -6,7 +6,9 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.sql.SQLIntegrityConstraintViolationException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -160,5 +162,37 @@ public class ImportacaoService {
 	public Object buscarDetalhesTransacao(String dataTransacao) {
 		return arquivoRepository.findTransacaoDetalhes(dataTransacao);
 	}
+
+	public List<Transacao> analisarTransacoesSuspeitasData(String dataAnalisar) {
+		
+		
+		List<Transacao> transacoes = arquivoRepository.findByDataTransacaoDetalhado(tratarDataPesquisa(dataAnalisar));
+		
+		List<Transacao> transacoesSuspeitas = new ArrayList<Transacao>();
+		
+		
+		for (Transacao transacao : transacoes) {
+			if(transacao.getValorTransacao().compareTo(new BigDecimal("100000.00")) >= 0){
+				transacoesSuspeitas.add(transacao);
+			}
+		}
+		
+		return transacoesSuspeitas;
+		
+	}
+	
+	public List<Transacao> analisarContasSuspeitas(String dataAnalisar) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private String tratarDataPesquisa(String dataAnalisar) {
+		
+		String dataSplit[] = dataAnalisar.split("/");
+		
+		return dataSplit[1] + "-" + dataSplit[0];
+	}
+
+	
 
 }

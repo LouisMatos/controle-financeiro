@@ -44,6 +44,8 @@ public class ImportacaoController {
 		
 		model.addAttribute("contasSuspeitas", importacaoService.analisarContasSuspeitas(dataAnalisar));
 		
+		model.addAttribute("agenciasSuspeitas", importacaoService.analisarAgenciasSuspeitas(dataAnalisar));
+		
 		return "transacoes/transacoesSuspeitas";
 	}
 	

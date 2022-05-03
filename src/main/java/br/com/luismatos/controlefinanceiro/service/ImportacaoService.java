@@ -6,9 +6,7 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.sql.SQLIntegrityConstraintViolationException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +17,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import br.com.luismatos.controlefinanceiro.model.AgenciaDTO;
+import br.com.luismatos.controlefinanceiro.model.AgenciaSuspeita;
+import br.com.luismatos.controlefinanceiro.model.ContaDTO;
+import br.com.luismatos.controlefinanceiro.model.ContaSuspeita;
 import br.com.luismatos.controlefinanceiro.model.ImportacaoRealizadaDTO;
 import br.com.luismatos.controlefinanceiro.model.Transacao;
 import br.com.luismatos.controlefinanceiro.model.Usuario;
@@ -181,9 +183,86 @@ public class ImportacaoService {
 		
 	}
 	
-	public List<Transacao> analisarContasSuspeitas(String dataAnalisar) {
-		// TODO Auto-generated method stub
-		return null;
+	
+	public ArrayList<ContaSuspeita> analisarContasSuspeitas(String dataAnalisar) {
+		
+		ArrayList<ContaSuspeita> contaSuspeitas = new ArrayList<ContaSuspeita>();
+		
+		//Aqui estou verificando as contas suspeitas de origem,quer dizer que estão mandando valores suspeitos, então vai virar valores de saida no front(SAIDA)
+		List<ContaDTO> contasOrigem = arquivoRepository.findAllAgenciaAndContaOrigem(tratarDataPesquisa(dataAnalisar));
+		
+		for (ContaDTO conta : contasOrigem) {
+			ContaSuspeita contaSuspeita = new ContaSuspeita();
+			contaSuspeita.setBanco(conta.getBanco());
+			contaSuspeita.setAgencia(conta.getAgencia());
+			contaSuspeita.setConta(conta.getConta());
+			contaSuspeita.setValorSuspeito(String.valueOf(arquivoRepository.getValorTransacoesSuspeitasOrigem(tratarDataPesquisa(dataAnalisar), conta.getConta(), conta.getAgencia(), conta.getBanco())));
+			contaSuspeita.setTipoMovimentacao("SAIDA");
+			if(!contaSuspeita.getValorSuspeito().equals("null")) {
+				contaSuspeitas.add(contaSuspeita);
+//				System.out.println(contaSuspeita.toString());
+			}
+		}
+		
+		//Aqui estou verificando as contas suspeitas de destino,quer dizer que estão recebendo valores suspeitos, então vai virar valores de Entrada no front(Entrada)
+		List<ContaDTO> contasDestino = arquivoRepository.findAllAgenciaAndContaDestino(tratarDataPesquisa(dataAnalisar));
+		
+		for (ContaDTO conta : contasDestino) {
+			
+			ContaSuspeita contaSuspeita = new ContaSuspeita();
+			contaSuspeita.setBanco(conta.getBanco());
+			contaSuspeita.setAgencia(conta.getAgencia());
+			contaSuspeita.setConta(conta.getConta());
+			contaSuspeita.setValorSuspeito(String.valueOf(arquivoRepository.getValorTransacoesSuspeitasSaida(tratarDataPesquisa(dataAnalisar), conta.getConta(), conta.getAgencia(), conta.getBanco())));
+			contaSuspeita.setTipoMovimentacao("ENTRADA");
+			if(!contaSuspeita.getValorSuspeito().equals("null")) {
+				contaSuspeitas.add(contaSuspeita);
+//				System.out.println(contaSuspeita.toString());
+			}
+			
+			
+		}
+		
+		return contaSuspeitas;
+	}
+	
+	public ArrayList<AgenciaSuspeita> analisarAgenciasSuspeitas(String dataAnalisar) {
+		
+		ArrayList<AgenciaSuspeita> agenciasSuspeitas = new ArrayList<AgenciaSuspeita>();
+		
+		
+		List<AgenciaDTO> agenciaOrigem = arquivoRepository.findAllAgenciaOrigem(tratarDataPesquisa(dataAnalisar));
+		
+		
+		for (AgenciaDTO agencia : agenciaOrigem) {
+			AgenciaSuspeita agenciaSuspeita = new AgenciaSuspeita();
+			agenciaSuspeita.setAgencia(agencia.getAgencia());
+			agenciaSuspeita.setBanco(agencia.getBanco());
+			agenciaSuspeita.setTipoMovimentacao("SAIDA");
+			agenciaSuspeita.setValorSuspeito(String.valueOf(arquivoRepository.getValorAgenciaSuspeitasOrigem(tratarDataPesquisa(dataAnalisar), agencia.getAgencia(), agencia.getBanco())));
+			
+			if(!agenciaSuspeita.getValorSuspeito().equals("null")) {
+				agenciasSuspeitas.add(agenciaSuspeita);
+				
+			}
+		}
+		
+		List<AgenciaDTO> agenciaDestino = arquivoRepository.findAllAgenciaDestino(tratarDataPesquisa(dataAnalisar));
+		
+		for (AgenciaDTO agencia : agenciaDestino) {
+			AgenciaSuspeita agenciaSuspeita = new AgenciaSuspeita();
+			agenciaSuspeita.setAgencia(agencia.getAgencia());
+			agenciaSuspeita.setBanco(agencia.getBanco());
+			agenciaSuspeita.setTipoMovimentacao("ENTRADA");
+			agenciaSuspeita.setValorSuspeito(String.valueOf(arquivoRepository.getValorAgenciaSuspeitasDestino(tratarDataPesquisa(dataAnalisar), agencia.getAgencia(), agencia.getBanco())));
+			
+			if(!agenciaSuspeita.getValorSuspeito().equals("null")) {
+				agenciasSuspeitas.add(agenciaSuspeita);
+				
+			}
+		}
+		
+		return agenciasSuspeitas;
 	}
 
 	private String tratarDataPesquisa(String dataAnalisar) {
@@ -192,6 +271,8 @@ public class ImportacaoService {
 		
 		return dataSplit[1] + "-" + dataSplit[0];
 	}
+
+	
 
 	
 

@@ -128,6 +128,15 @@
 													"sSortDescending" : ": Ordenar colunas de forma descendente"
 												}
 											},
+											
+											"orderable" : true,
+											"order" : [ 6, "desc" ],
+											'columnDefs' : [
+													
+													{
+														'targets' : 6,
+														render: $.fn.dataTable.render.number( '.', ',', 2, 'R$' )
+													}],
 
 										});
 
